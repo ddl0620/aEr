@@ -1,0 +1,77 @@
+{
+  "chart": {
+    "title": "Direct primary energy consumption from fossil fuels, nuclear, and renewables",
+    "subtitle": "Percentages are in terms of direct [primary energy](#dod:primaryenergy), which means that fossil fuels include the energy lost due to inefficiencies in energy production.",
+    "note": "Renewables include hydropower, solar, wind, geothermal, wave, tidal, and bioenergy; they do not include traditional biofuels.",
+    "citation": "Energy Institute - Statistical Review of World Energy (2024)",
+    "originalChartUrl": "https://ourworldindata.org/grapher/primary-energy-fossil-nuclear-renewables?v=1&csvType=full&useColumnShortNames=false",
+    "selection": [
+      "World"
+    ]
+  },
+  "columns": {
+    "Nuclear (% direct primary energy)": {
+      "titleShort": "Share of direct primary energy consumption that comes from nuclear power",
+      "titleLong": "Share of direct primary energy consumption that comes from nuclear power - In terms of direct primary energy",
+      "descriptionShort": "Measured as a percentage of the total (direct) primary energy.",
+      "descriptionKey": [
+        "Figures are based on gross generation and do not account for cross-border electricity supply.",
+        "Direct primary energy of non-fossil electricity sources corresponds to electricity generation."
+      ],
+      "shortUnit": "%",
+      "unit": "%",
+      "timespan": "1965-2023",
+      "type": "Numeric",
+      "owidVariableId": 943990,
+      "shortName": "nuclear__pct_direct_primary_energy",
+      "lastUpdated": "2024-06-20",
+      "nextUpdate": "2025-06-20",
+      "citationShort": "Energy Institute - Statistical Review of World Energy (2024) – with major processing by Our World in Data",
+      "citationLong": "Energy Institute - Statistical Review of World Energy (2024) – with major processing by Our World in Data. “Share of direct primary energy consumption that comes from nuclear power – In terms of direct primary energy” [dataset]. Energy Institute, “Statistical Review of World Energy” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/943990.metadata.json"
+    },
+    "Renewables (% direct primary energy)": {
+      "titleShort": "Share of direct primary energy consumption that comes from renewables",
+      "titleLong": "Share of direct primary energy consumption that comes from renewables - In terms of direct primary energy",
+      "descriptionShort": "Measured as a percentage of the total (direct) primary energy.",
+      "descriptionKey": [
+        "Figures are based on gross generation and do not account for cross-border electricity supply.",
+        "Direct primary energy of non-fossil electricity sources corresponds to electricity generation."
+      ],
+      "shortUnit": "%",
+      "unit": "%",
+      "timespan": "1965-2023",
+      "type": "Numeric",
+      "owidVariableId": 943995,
+      "shortName": "renewables__pct_direct_primary_energy",
+      "lastUpdated": "2024-06-20",
+      "nextUpdate": "2025-06-20",
+      "citationShort": "Energy Institute - Statistical Review of World Energy (2024) – with major processing by Our World in Data",
+      "citationLong": "Energy Institute - Statistical Review of World Energy (2024) – with major processing by Our World in Data. “Share of direct primary energy consumption that comes from renewables – In terms of direct primary energy” [dataset]. Energy Institute, “Statistical Review of World Energy” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/943995.metadata.json"
+    },
+    "Fossil fuels (% direct primary energy)": {
+      "titleShort": "Share of direct primary energy consumption that comes from fossil fuels",
+      "titleLong": "Share of direct primary energy consumption that comes from fossil fuels - In terms of direct primary energy",
+      "descriptionShort": "Measured as a percentage of the total (direct) primary energy.",
+      "descriptionKey": [
+        "Includes commercial solid fuels only, i.e. bituminous coal and anthracite (hard coal), and lignite and brown (sub-bituminous) coal, and other commercial solid fuels. Excludes coal converted to liquid or gaseous fuels, but includes coal consumed in transformation processes. Differences between the consumption figures and the world production statistics are accounted for by stock changes, and unavoidable disparities in the definition, measurement or conversion of coal supply and demand data.",
+        "Includes inland demand plus international aviation and marine bunkers and refinery fuel and loss. Consumption of biogasoline (such as ethanol) and biodiesel are excluded while derivatives of coal and natural gas are included. Differences between the world consumption figures and world production statistics are accounted for by stock changes, consumption of non-petroleum additives and substitute fuels and unavoidable disparities in the definition, measurement or conversion of oil supply and demand data.",
+        "Excludes natural gas converted to liquid fuels but includes derivatives of coal as well as natural gas consumed in Gas-to-Liquids transformation. The difference between the world consumption figures and the world production statistics is due to variations in stocks at storage facilities and liquefaction plants, together with unavoidable disparities in the definition, measurement or conversion of gas supply and demand data."
+      ],
+      "shortUnit": "%",
+      "unit": "%",
+      "timespan": "1965-2023",
+      "type": "Numeric",
+      "owidVariableId": 943967,
+      "shortName": "fossil_fuels__pct_direct_primary_energy",
+      "lastUpdated": "2024-06-20",
+      "nextUpdate": "2025-06-20",
+      "citationShort": "Energy Institute - Statistical Review of World Energy (2024) – with major processing by Our World in Data",
+      "citationLong": "Energy Institute - Statistical Review of World Energy (2024) – with major processing by Our World in Data. “Share of direct primary energy consumption that comes from fossil fuels – In terms of direct primary energy” [dataset]. Energy Institute, “Statistical Review of World Energy” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/943967.metadata.json"
+    }
+  },
+  "dateDownloaded": "2025-05-12",
+  "activeFilters": {}
+}

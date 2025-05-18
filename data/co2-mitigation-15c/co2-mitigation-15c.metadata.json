@@ -1,0 +1,45 @@
+{
+  "chart": {
+    "title": "CO₂ reductions needed to keep global temperature rise below 1.5°C",
+    "subtitle": "Annual emissions of carbon dioxide under various mitigation scenarios to keep global average temperature rise below 1.5°C. Scenarios are based on the CO₂ reductions necessary if mitigation had started – with global emissions peaking and quickly reducing – in the given year.",
+    "note": "Carbon budgets are based on a >66% chance of staying below 1.5°C from the IPCC's SR15 Report.",
+    "citation": "Robbie Andrew",
+    "originalChartUrl": "https://ourworldindata.org/grapher/co2-mitigation-15c?v=1&csvType=full&useColumnShortNames=false",
+    "selection": [
+      "Historical",
+      "Start in 2000",
+      "Start in 2002",
+      "Start in 2004",
+      "Start in 2006",
+      "Start in 2008",
+      "Start in 2010",
+      "Start in 2012",
+      "Start in 2014",
+      "Start in 2016",
+      "Start in 2018",
+      "Start in 2020",
+      "Start in 2022",
+      "Start in 2024",
+      "Start in 2026"
+    ]
+  },
+  "columns": {
+    "CO2 mitigation curves to meet a 1.5C target": {
+      "titleShort": "CO2 mitigation curves to meet a 1.5C target",
+      "titleLong": "CO2 mitigation curves to meet a 1.5C target",
+      "shortUnit": "t",
+      "unit": "tonnes",
+      "timespan": "1750-2100",
+      "type": "Numeric",
+      "conversionFactor": 1,
+      "owidVariableId": 526764,
+      "shortName": "emissions",
+      "lastUpdated": "2019-12-03",
+      "citationShort": " – processed by Our World in Data",
+      "citationLong": " – processed by Our World in Data. “CO2 mitigation curves to meet a 1.5C target” [dataset]. Robbie Andrew [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/526764.metadata.json"
+    }
+  },
+  "dateDownloaded": "2025-05-16",
+  "activeFilters": {}
+}

@@ -1,0 +1,47 @@
+{
+  "chart": {
+    "title": "Global atmospheric CO₂ concentration",
+    "subtitle": "Atmospheric carbon dioxide (CO₂) concentration is measured in parts per million (ppm).",
+    "citation": "NOAA Global Monitoring Laboratory - Trends in Atmospheric Carbon Dioxide (2025)",
+    "originalChartUrl": "https://ourworldindata.org/grapher/global-co2-concentration?v=1&csvType=full&useColumnShortNames=false",
+    "selection": [
+      "World"
+    ]
+  },
+  "columns": {
+    "Monthly concentration of atmospheric carbon dioxide": {
+      "titleShort": "Monthly concentration of atmospheric carbon dioxide",
+      "titleLong": "Monthly concentration of atmospheric carbon dioxide",
+      "descriptionShort": "Measured in parts per million.",
+      "shortUnit": "ppm",
+      "unit": "parts per million",
+      "timespan": "",
+      "type": "Numeric",
+      "owidVariableId": 1015549,
+      "shortName": "co2_concentration",
+      "lastUpdated": "2025-03-17",
+      "nextUpdate": "2025-05-16",
+      "citationShort": "NOAA Global Monitoring Laboratory - Trends in Atmospheric Carbon Dioxide (2025) – with minor processing by Our World in Data",
+      "citationLong": "NOAA Global Monitoring Laboratory - Trends in Atmospheric Carbon Dioxide (2025) – with minor processing by Our World in Data. “Monthly concentration of atmospheric carbon dioxide” [dataset]. NOAA Global Monitoring Laboratory, “Trends in Atmospheric Carbon Dioxide” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/1015549.metadata.json"
+    },
+    "Rolling yearly average of the concentration of atmospheric carbon dioxide": {
+      "titleShort": "Rolling yearly average of the concentration of atmospheric carbon dioxide",
+      "titleLong": "Rolling yearly average of the concentration of atmospheric carbon dioxide",
+      "descriptionShort": "Measured in parts per million.",
+      "shortUnit": "ppm",
+      "unit": "parts per million",
+      "timespan": "",
+      "type": "Numeric",
+      "owidVariableId": 1015550,
+      "shortName": "co2_concentration_yearly_average",
+      "lastUpdated": "2025-03-17",
+      "nextUpdate": "2025-05-16",
+      "citationShort": "NOAA Global Monitoring Laboratory - Trends in Atmospheric Carbon Dioxide (2025) – with major processing by Our World in Data",
+      "citationLong": "NOAA Global Monitoring Laboratory - Trends in Atmospheric Carbon Dioxide (2025) – with major processing by Our World in Data. “Rolling yearly average of the concentration of atmospheric carbon dioxide” [dataset]. NOAA Global Monitoring Laboratory, “Trends in Atmospheric Carbon Dioxide” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/1015550.metadata.json"
+    }
+  },
+  "dateDownloaded": "2025-05-07",
+  "activeFilters": {}
+}

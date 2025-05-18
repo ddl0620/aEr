@@ -1,0 +1,47 @@
+{
+  "chart": {
+    "title": "Global atmospheric methane concentrations",
+    "subtitle": "Atmospheric methane (CH₄) concentration is measured in parts per billion (ppb).",
+    "citation": "NOAA Global Monitoring Laboratory - Trends in Atmospheric Methane (2025)",
+    "originalChartUrl": "https://ourworldindata.org/grapher/global-methane-concentrations?v=1&csvType=full&useColumnShortNames=false",
+    "selection": [
+      "World"
+    ]
+  },
+  "columns": {
+    "Monthly concentration of atmospheric methane": {
+      "titleShort": "Monthly concentration of atmospheric methane",
+      "titleLong": "Monthly concentration of atmospheric methane",
+      "descriptionShort": "Measured in parts per million.",
+      "shortUnit": "ppb",
+      "unit": "parts per billion",
+      "timespan": "",
+      "type": "Numeric",
+      "owidVariableId": 1015552,
+      "shortName": "ch4_concentration",
+      "lastUpdated": "2025-03-17",
+      "nextUpdate": "2025-05-16",
+      "citationShort": "NOAA Global Monitoring Laboratory - Trends in Atmospheric Methane (2025) – with minor processing by Our World in Data",
+      "citationLong": "NOAA Global Monitoring Laboratory - Trends in Atmospheric Methane (2025) – with minor processing by Our World in Data. “Monthly concentration of atmospheric methane” [dataset]. NOAA Global Monitoring Laboratory, “Trends in Atmospheric Methane” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/1015552.metadata.json"
+    },
+    "Rolling yearly average of the concentration of atmospheric methane": {
+      "titleShort": "Rolling yearly average of the concentration of atmospheric methane",
+      "titleLong": "Rolling yearly average of the concentration of atmospheric methane",
+      "descriptionShort": "Measured in parts per million.",
+      "shortUnit": "ppb",
+      "unit": "parts per billion",
+      "timespan": "",
+      "type": "Numeric",
+      "owidVariableId": 1015553,
+      "shortName": "ch4_concentration_yearly_average",
+      "lastUpdated": "2025-03-17",
+      "nextUpdate": "2025-05-16",
+      "citationShort": "NOAA Global Monitoring Laboratory - Trends in Atmospheric Methane (2025) – with major processing by Our World in Data",
+      "citationLong": "NOAA Global Monitoring Laboratory - Trends in Atmospheric Methane (2025) – with major processing by Our World in Data. “Rolling yearly average of the concentration of atmospheric methane” [dataset]. NOAA Global Monitoring Laboratory, “Trends in Atmospheric Methane” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/1015553.metadata.json"
+    }
+  },
+  "dateDownloaded": "2025-05-07",
+  "activeFilters": {}
+}

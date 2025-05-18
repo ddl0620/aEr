@@ -1,0 +1,37 @@
+{
+  "chart": {
+    "title": "Ice sheet mass balance",
+    "subtitle": "Cumulative change in mass of ice sheets, measured relative to a base year of 2002. For reference, 1,000 billion metric tons is equal to about 260 cubic miles of ice—enough to raise sea level by about 3 millimeters.",
+    "citation": "EPA based on various sources (2021)",
+    "originalChartUrl": "https://ourworldindata.org/grapher/ice-sheet-mass-balance?v=1&csvType=full&useColumnShortNames=false",
+    "selection": [
+      "Greenland",
+      "Antarctica"
+    ]
+  },
+  "columns": {
+    "Cumulative change in mass in the ice sheets, according to NASA/JPL": {
+      "titleShort": "Cumulative change in mass in the ice sheets, according to NASA/JPL",
+      "titleLong": "Cumulative change in mass in the ice sheets, according to NASA/JPL - NASA/JPL",
+      "descriptionShort": "Measured in billion tonnes.",
+      "descriptionKey": [
+        "Values are centered at zero in 2002 to provide a consistent point of reference.",
+        "A downward slope indicates a net loss of ice and snow.",
+        "For reference, 1,000 billion metric tons is enough to raise sea level by about 3 millimeters."
+      ],
+      "shortUnit": "billion t",
+      "unit": "billion tonnes",
+      "timespan": "",
+      "type": "Numeric",
+      "owidVariableId": 1015544,
+      "shortName": "land_ice_mass_nasa",
+      "lastUpdated": "2025-03-17",
+      "nextUpdate": "2025-05-16",
+      "citationShort": "EPA based on various sources (2021) – with major processing by Our World in Data",
+      "citationLong": "EPA based on various sources (2021) – with major processing by Our World in Data. “Cumulative change in mass in the ice sheets, according to NASA/JPL – NASA/JPL” [dataset]. United States Environmental Protection Agency, “Climate Change Indicators: Ice Sheets” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/1015544.metadata.json"
+    }
+  },
+  "dateDownloaded": "2025-05-14",
+  "activeFilters": {}
+}

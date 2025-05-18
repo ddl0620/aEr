@@ -1,0 +1,112 @@
+{
+  "chart": {
+    "title": "Global warming contributions by gas and source",
+    "subtitle": "The global mean surface temperature change as a result of the cumulative emissions of three gases – carbon dioxide, methane, and nitrous oxide.",
+    "note": "This does not include cooling impacts from sulphur dioxide and aerosols, so the net warming can be lower.",
+    "citation": "Jones et al. (2024)",
+    "originalChartUrl": "https://ourworldindata.org/grapher/global-warming-by-gas-and-source?v=1&csvType=full&useColumnShortNames=false",
+    "selection": [
+      "World"
+    ]
+  },
+  "columns": {
+    "Change in global mean surface temperature caused by nitrous oxide emissions from fossil fuels and industry": {
+      "titleShort": "Change in global mean surface temperature caused by nitrous oxide emissions from fossil fuels and industry",
+      "titleLong": "Change in global mean surface temperature caused by nitrous oxide emissions from fossil fuels and industry",
+      "descriptionShort": "Measured in °C.",
+      "shortUnit": "°C",
+      "unit": "°C",
+      "timespan": "1851-2023",
+      "type": "Numeric",
+      "owidVariableId": 998891,
+      "shortName": "temperature_response_n2o_fossil",
+      "lastUpdated": "2024-11-21",
+      "nextUpdate": "2025-11-21",
+      "citationShort": "Jones et al. (2024) – with major processing by Our World in Data",
+      "citationLong": "Jones et al. (2024) – with major processing by Our World in Data. “Change in global mean surface temperature caused by nitrous oxide emissions from fossil fuels and industry” [dataset]. Jones et al., “National contributions to climate change 2024.2” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/998891.metadata.json"
+    },
+    "Change in global mean surface temperature caused by nitrous oxide emissions from agriculture and land use": {
+      "titleShort": "Change in global mean surface temperature caused by nitrous oxide emissions from agriculture and land use",
+      "titleLong": "Change in global mean surface temperature caused by nitrous oxide emissions from agriculture and land use",
+      "descriptionShort": "Measured in °C.",
+      "shortUnit": "°C",
+      "unit": "°C",
+      "timespan": "1851-2023",
+      "type": "Numeric",
+      "owidVariableId": 998892,
+      "shortName": "temperature_response_n2o_land",
+      "lastUpdated": "2024-11-21",
+      "nextUpdate": "2025-11-21",
+      "citationShort": "Jones et al. (2024) – with major processing by Our World in Data",
+      "citationLong": "Jones et al. (2024) – with major processing by Our World in Data. “Change in global mean surface temperature caused by nitrous oxide emissions from agriculture and land use” [dataset]. Jones et al., “National contributions to climate change 2024.2” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/998892.metadata.json"
+    },
+    "Change in global mean surface temperature caused by methane emissions from fossil fuels and industry": {
+      "titleShort": "Change in global mean surface temperature caused by methane emissions from fossil fuels and industry",
+      "titleLong": "Change in global mean surface temperature caused by methane emissions from fossil fuels and industry",
+      "descriptionShort": "Measured in °C.",
+      "shortUnit": "°C",
+      "unit": "°C",
+      "timespan": "1851-2023",
+      "type": "Numeric",
+      "owidVariableId": 998872,
+      "shortName": "temperature_response_ch4_fossil",
+      "lastUpdated": "2024-11-21",
+      "nextUpdate": "2025-11-21",
+      "citationShort": "Jones et al. (2024) – with major processing by Our World in Data",
+      "citationLong": "Jones et al. (2024) – with major processing by Our World in Data. “Change in global mean surface temperature caused by methane emissions from fossil fuels and industry” [dataset]. Jones et al., “National contributions to climate change 2024.2” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/998872.metadata.json"
+    },
+    "Change in global mean surface temperature caused by methane emissions from agriculture and land use": {
+      "titleShort": "Change in global mean surface temperature caused by methane emissions from agriculture and land use",
+      "titleLong": "Change in global mean surface temperature caused by methane emissions from agriculture and land use",
+      "descriptionShort": "Measured in °C.",
+      "shortUnit": "°C",
+      "unit": "°C",
+      "timespan": "1851-2023",
+      "type": "Numeric",
+      "owidVariableId": 998874,
+      "shortName": "temperature_response_ch4_land",
+      "lastUpdated": "2024-11-21",
+      "nextUpdate": "2025-11-21",
+      "citationShort": "Jones et al. (2024) – with major processing by Our World in Data",
+      "citationLong": "Jones et al. (2024) – with major processing by Our World in Data. “Change in global mean surface temperature caused by methane emissions from agriculture and land use” [dataset]. Jones et al., “National contributions to climate change 2024.2” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/998874.metadata.json"
+    },
+    "Change in global mean surface temperature caused by CO₂ emissions from fossil fuels and industry": {
+      "titleShort": "Change in global mean surface temperature caused by CO₂ emissions from fossil fuels and industry",
+      "titleLong": "Change in global mean surface temperature caused by CO₂ emissions from fossil fuels and industry",
+      "descriptionShort": "Measured in °C.",
+      "shortUnit": "°C",
+      "unit": "°C",
+      "timespan": "1851-2023",
+      "type": "Numeric",
+      "owidVariableId": 998880,
+      "shortName": "temperature_response_co2_fossil",
+      "lastUpdated": "2024-11-21",
+      "nextUpdate": "2025-11-21",
+      "citationShort": "Jones et al. (2024) – with major processing by Our World in Data",
+      "citationLong": "Jones et al. (2024) – with major processing by Our World in Data. “Change in global mean surface temperature caused by CO₂ emissions from fossil fuels and industry” [dataset]. Jones et al., “National contributions to climate change 2024.2” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/998880.metadata.json"
+    },
+    "Change in global mean surface temperature caused by CO₂ emissions from agriculture and land use": {
+      "titleShort": "Change in global mean surface temperature caused by CO₂ emissions from agriculture and land use",
+      "titleLong": "Change in global mean surface temperature caused by CO₂ emissions from agriculture and land use",
+      "descriptionShort": "Measured in °C.",
+      "shortUnit": "°C",
+      "unit": "°C",
+      "timespan": "1851-2023",
+      "type": "Numeric",
+      "owidVariableId": 998884,
+      "shortName": "temperature_response_co2_land",
+      "lastUpdated": "2024-11-21",
+      "nextUpdate": "2025-11-21",
+      "citationShort": "Jones et al. (2024) – with major processing by Our World in Data",
+      "citationLong": "Jones et al. (2024) – with major processing by Our World in Data. “Change in global mean surface temperature caused by CO₂ emissions from agriculture and land use” [dataset]. Jones et al., “National contributions to climate change 2024.2” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/998884.metadata.json"
+    }
+  },
+  "dateDownloaded": "2025-05-16",
+  "activeFilters": {}
+}

@@ -1,0 +1,1330 @@
+---
+title: "Climate change"
+subtitle: "Are we 'cooked'?"
+author: "Lam Dao - s4019052"
+date: "May 6, 2025"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+    css: ["default", "default-fonts"]
+    self_contained: true
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(dplyr)
+library(ggplot2)
+library(plotly)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+## Rising greenhouse gas emissions.
+
+<div style="display: flex; flex-direction: row; align-items: flex-start; width: 100%;">
+
+<div style="flex: 1; padding-right: 20px;">
+```{r}
+library(dplyr)
+library(plotly)
+
+# Reading the data
+data <- read.csv("data/ghg-emissions-by-gas/ghg-emissions-by-gas.csv")
+colnames(data) <- c("Entity", "Code", "Year", "Nitrous_Oxide", "Methane", "CO2")
+
+# Filtering for World and selecting relevant columns
+plot_data <- data %>%
+  filter(Entity == "World") %>%
+  select(Year, CO2, Methane, Nitrous_Oxide) %>%
+  arrange(Year)
+
+# Compute cumulative y-values for stacking
+plot_data <- plot_data %>%
+  mutate(
+    Methane_Cum = CO2 + Methane,  # Methane starts above CO2
+    Nitrous_Cum = CO2 + Methane + Nitrous_Oxide  # Nitrous Oxide starts above Methane
+  )
+
+# Calculate max y-value for y-axis range
+max_y <- max(plot_data$Nitrous_Cum, na.rm = TRUE)
+
+# Extract CO2 values for 1850, 1950, and 2023 for annotation context
+co2_1850 <- plot_data$CO2[plot_data$Year == 1850]
+co2_1950 <- plot_data$CO2[plot_data$Year == 1950]
+co2_2023 <- plot_data$CO2[plot_data$Year == 2023]
+
+# Calculate percentage increase from 1950 to 2023
+percent_increase <- ((co2_2023 - co2_1950) / co2_1950) * 100
+
+# Create Plotly stacked area chart with slider and annotations
+p <- plot_ly() %>%
+  add_trace(
+    data = plot_data,
+    x = ~Year, y = ~CO2, name = "CO2",
+    type = "scatter", mode = "none", fill = "tozeroy",
+    fillcolor = "rgba(139, 0, 0, 0.8)",
+    hoverinfo = "text", text = ~paste("Year:", Year, "<br>CO2:", round(CO2, 2), "tonnes")
+  ) %>%
+  add_trace(
+    data = plot_data,
+    x = ~Year, y = ~Methane_Cum, name = "Methane",
+    type = "scatter", mode = "none", fill = "tonexty",
+    fillcolor = "rgba(0, 100, 0, 0.8)",
+    hoverinfo = "text", text = ~paste("Year:", Year, "<br>Methane:", round(Methane, 2), "tonnes")
+  ) %>%
+  add_trace(
+    data = plot_data,
+    x = ~Year, y = ~Nitrous_Cum, name = "Nitrous Oxide",
+    type = "scatter", mode = "none", fill = "tonexty",
+    fillcolor = "rgba(173, 216, 230, 0.8)",
+    hoverinfo = "text", text = ~paste("Year:", Year, "<br>Nitrous Oxide:", round(Nitrous_Oxide, 2), "tonnes")
+  ) %>%
+  layout(
+    title = list(text = "Global Greenhouse Gas Emissions (1850–2023)", x = 0.5, font = list(size = 14)),
+    xaxis = list(
+      title = "Year", titlefont = list(size = 12), tickfont = list(size = 10),
+      range = c(1850, 2023)
+    ),
+    yaxis = list(
+      title = "Emissions (tonnes CO2e)", titlefont = list(size = 12), tickfont = list(size = 10),
+      range = c(0, max_y)  # Lock y-axis to max cumulative emissions
+    ),
+    legend = list(orientation = "v", x = 1.05, xanchor = "left", y = 0.5, font = list(size = 10)),
+    margin = list(t = 50, b = 50, l = 50, r = 50),
+    autosize = TRUE,
+    height = 400,
+    sliders = list(
+      list(
+        active = 0,
+        currentvalue = list(prefix = "Year: "),
+        pad = list(t = 20),
+        steps = lapply(unique(plot_data$Year), function(year) {
+          list(
+            label = as.character(year),
+            method = "restyle",
+            args = list(
+              list(
+                x = list(plot_data$Year[plot_data$Year <= year]),
+                y = list(
+                  plot_data$CO2[plot_data$Year <= year],
+                  plot_data$Methane_Cum[plot_data$Year <= year],
+                  plot_data$Nitrous_Cum[plot_data$Year <= year]
+                )
+              ),
+              0:2  # Apply to all traces
+            )
+          )
+        })
+      )
+    ),
+    # Add annotations to highlight CO2 rise
+    annotations = list(
+      # Annotation for 1850–1950 period (relatively flat CO2 emissions)
+      list(
+        x = 1950,  # Center of 1850–1950 period
+        y = co2_1950 * 1.5,  # Slightly above CO2 value for visibility
+        text = paste0("1850–1950: CO2 emissions raised\napprox. 124.5M tons per year"),
+        showarrow = TRUE,
+        arrowhead = 2,
+        ax = -50,
+        ay = -30,  # Arrow pointing downward
+        align = "center",
+        xanchor = "center",
+        yanchor = "bottom",
+        font = list(size = 10, color = "#000000"),
+        bgcolor = "#FFFFFF",
+        bordercolor = "#000000",
+        borderwidth = 1,
+        arrowcolor = "#000000"
+      ),
+      # Annotation for 1950–2023 period (sharp CO2 rise)
+      list(
+        x = 2023,  # Center of 1950–2023 period
+        y = co2_2023 * 1.325,  # Near CO2 value in 2023
+        text = paste0("1950–2023: CO2 emissions soared\napprox. 371M tons per year"),
+        showarrow = TRUE,
+        arrowhead = 2,
+        ax = -140,
+        ay = 30,  # Arrow pointing to CO2 trace
+        align = "center",
+        xanchor = "center",
+        yanchor = "top",
+        font = list(size = 10, color = "#000000"),
+        bgcolor = "#FFFFFF",
+        bordercolor = "#000000",
+        borderwidth = 1,
+        arrowcolor = "#000000"
+      )
+    )
+  )
+
+# Render the plot
+p
+```
+
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 15px;">
+  <div style="flex: 1; padding-left: 20px; background-color: #f8f9fa; border-left: 4px solid #dc3545; padding: 15px; font-family: Arial, sans-serif; line-height: 1.6; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p style="margin: 0; color: #333; font-size: 16px;">
+      Between 1850 and 1950, greenhouse gas emissions climbed steadily at a rate of <strong>125.5 million tons per year</strong>, reflecting the gradual impact of early industrialization. Yet, from 1950 to 2023, this increase surged dramatically to <strong>371 million tons annually</strong>, underscoring the alarming acceleration of emissions in the modern era.
+    </p>
+  </div>
+  <div style="flex: 1; padding-left: 20px; background-color: #fff3e6; border-left: 4px solid #f28c38; padding: 15px; font-family: Arial, sans-serif; line-height: 1.6; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p style="margin: 0; color: #333; font-size: 16px;">
+      By 2023, total greenhouse gas emissions had soared past <strong>50 billion tons</strong>, with CO2 emerging as the predominant contributor, driving the bulk of this unprecedented rise.
+    </p>
+  </div>
+</div>
+
+---
+
+## Heating earth.
+
+<div style="display: flex; flex-direction: row; align-items: flex-start; width: 100%;">
+
+<div style="flex: 1; padding-right: 20px;">
+```{r}
+# Load required libraries
+library(dplyr)
+library(plotly)
+
+# Read the CSV file
+data <- read.csv("data/temperature-anomaly/temperature-anomaly.csv")
+
+# Filter data for World (OWID_WRL) to focus on global data
+world_data <- data %>% 
+  filter(Entity == "World") %>%
+  arrange(Year)  # Ensure data is sorted by Year
+
+# Calculate min and max y-values for y-axis range
+max_y <- max(
+  world_data$Global_average_temperature_anomaly_relative_to_1861_1890,
+  world_data$Lower_bound_of_the_annual_temperature_anomaly_.95._confidence_interval.,
+  world_data$Upper_bound_of_the_annual_temperature_anomaly_.95._confidence_interval.,
+  na.rm = TRUE
+)
+min_y <- min(
+  world_data$Global_average_temperature_anomaly_relative_to_1861_1890,
+  world_data$Lower_bound_of_the_annual_temperature_anomaly_.95._confidence_interval.,
+  world_data$Upper_bound_of_the_annual_temperature_anomaly_.95._confidence_interval.,
+  na.rm = TRUE
+)
+
+# Split data into two phases for best-fit lines
+phase1_data <- world_data %>% filter(Year >= 1850 & Year <= 1950)
+phase2_data <- world_data %>% filter(Year >= 1950 & Year <= 2025)
+
+# Calculate linear regression for each phase
+fit_phase1 <- lm(Global_average_temperature_anomaly_relative_to_1861_1890 ~ Year, data = phase1_data)
+fit_phase2 <- lm(Global_average_temperature_anomaly_relative_to_1861_1890 ~ Year, data = phase2_data)
+
+# Generate predicted values for trend lines
+phase1_trend <- data.frame(
+  Year = phase1_data$Year,
+  Trend = predict(fit_phase1, newdata = phase1_data)
+)
+phase2_trend <- data.frame(
+  Year = phase2_data$Year,
+  Trend = predict(fit_phase2, newdata = phase2_data)
+)
+
+# Create Plotly plot
+p <- plot_ly() %>%
+  # Add the average temperature anomaly line (highlighted)
+  add_trace(
+    data = world_data,
+    x = ~Year,
+    y = ~Global_average_temperature_anomaly_relative_to_1861_1890,
+    type = "scatter",
+    mode = "lines",
+    name = "Average Anomaly",
+    line = list(color = "#1f77b4", width = 3),
+    hoverinfo = "text",
+    text = ~paste("Year:", Year, "<br>Average Anomaly:", 
+                  round(Global_average_temperature_anomaly_relative_to_1861_1890, 3), " °C")
+  ) %>%
+  # Add the lower bound of the confidence interval
+  add_trace(
+    data = world_data,
+    x = ~Year,
+    y = ~Lower_bound_of_the_annual_temperature_anomaly_.95._confidence_interval.,
+    type = "scatter",
+    mode = "lines",
+    name = "Lower Bound (95% CI)",
+    line = list(color = "#aec7e8", width = 1),
+    hoverinfo = "text",
+    text = ~paste("Year:", Year, "<br>Lower Bound:", 
+                  round(Lower_bound_of_the_annual_temperature_anomaly_.95._confidence_interval., 3), " °C")
+  ) %>%
+  # Add the upper bound of the confidence interval
+  add_trace(
+    data = world_data,
+    x = ~Year,
+    y = ~Upper_bound_of_the_annual_temperature_anomaly_.95._confidence_interval.,
+    type = "scatter",
+    mode = "lines",
+    name = "Upper Bound (95% CI)",
+    line = list(color = "#aec7e8", width = 1),
+    hoverinfo = "text",
+    text = ~paste("Year:", Year, "<br>Upper Bound:", 
+                  round(Upper_bound_of_the_annual_temperature_anomaly_.95._confidence_interval., 3), " °C")
+  ) %>%
+  # Add best-fit line for 1850–1950
+  add_trace(
+    data = phase1_trend,
+    x = ~Year,
+    y = ~Trend,
+    type = "scatter",
+    mode = "lines",
+    name = "Trend 1850–1950",
+    line = list(color = "#ff7f0e", width = 2),
+    hoverinfo = "text",
+    text = ~paste("Year:", Year, "<br>Trend 1850–1950:", round(Trend, 3), " °C")
+  ) %>%
+  # Add best-fit line for 1950–2025
+  add_trace(
+    data = phase2_trend,
+    x = ~Year,
+    y = ~Trend,
+    type = "scatter",
+    mode = "lines",
+    name = "Trend 1950–2025",
+    line = list(color = "#2ca02c", width = 2),
+    hoverinfo = "text",
+    text = ~paste("Year:", Year, "<br>Trend 1950–2025:", round(Trend, 3), " °C")
+  ) %>%
+  # Customize layout with slider, locked y-axis, and shifted legend
+  layout(
+    title = list(text = "Global Temperature Anomalies (1850-2025)", x = 0.5, font = list(size = 14)),
+    xaxis = list(
+      title = "Year",
+      titlefont = list(size = 12),
+      tickfont = list(size = 10),
+      range = c(1850, 2025)
+    ),
+    yaxis = list(
+      title = "Temperature Anomaly (°C)",
+      titlefont = list(size = 12),
+      tickfont = list(size = 10),
+      range = c(min_y, max_y)
+    ),
+    legend = list(orientation = "h", x = 0.5, xanchor = "center", y = -0.5, font = list(size = 10)),
+    margin = list(t = 50, b = 100, l = 50, r = 50),
+    autosize = TRUE,
+    width = NULL,
+    height = 400,
+    # Annotations
+    annotations = list(
+      list(
+        x = 1900,
+        y = 0.055,
+        text = "Slight increase\nfrom 1850 to 1950",
+        xref = "x",
+        yref = "y",
+        showarrow = TRUE,
+        arrowhead = 2,
+        ax = -20,
+        ay = -50,
+        font = list(size = 10, color = "#000000"),
+        bgcolor = "#FFFFFF",
+        bordercolor = "#000000",
+        borderwidth = 1,
+        arrowcolor = "#000000"
+      ),
+      list(
+        x = 1990,
+        y = 0.675,
+        text = "Sharp increase\n from 1950-2025",
+        xref = "x",
+        yref = "y",
+        showarrow = TRUE,
+        arrowhead = 2,
+        ax = -30,
+        ay = -40,
+        font = list(size = 10, color = "#000000"),
+        bgcolor = "#FFFFFF",
+        bordercolor = "#000000",
+        borderwidth = 1,
+        arrowcolor = "#000000"
+      )
+    ),
+    # Add slider
+    sliders = list(
+      list(
+        active = 0,
+        currentvalue = list(prefix = "Year: "),
+        pad = list(t = 20),
+        steps = lapply(unique(world_data$Year), function(year) {
+          list(
+            label = as.character(year),
+            method = "restyle",
+            args = list(
+              list(
+                x = list(world_data$Year[world_data$Year <= year]),
+                y = list(
+                  world_data$Global_average_temperature_anomaly_relative_to_1861_1890[world_data$Year <= year],
+                  world_data$Lower_bound_of_the_annual_temperature_anomaly_.95._confidence_interval.[world_data$Year <= year],
+                  world_data$Upper_bound_of_the_annual_temperature_anomaly_.95._confidence_interval.[world_data$Year <= year]
+                )
+              ),
+              0:2  # Apply to original three traces only
+            )
+          )
+        })
+      )
+    )
+  )
+
+# Display the plot
+p
+```
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 15px;">
+  <div style="flex: 1; padding-left: 20px; background-color: #f8f9fa; border-left: 4px solid #dc3545; padding: 15px; font-family: Arial, sans-serif; line-height: 1.6; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p style="margin: 0 0 10px 0; color: #333; font-size: 16px;">
+      Consequently, global temperatures have risen in tandem with emissions:
+    </p>
+    <ul style="margin: 0; padding-left: 20px; color: #333; font-size: 16px; list-style-type: disc;">
+      <li style="margin-bottom: 5px;">From 1850 to 1950, despite yearly fluctuations, temperatures increased by an average of 0.02°C per year.</li>
+      <li style="margin-bottom: 5px;">However, from 1950 to 2025, the rate of temperature increase accelerated significantly, averaging 0.16°C per year—an eightfold rise compared to the 1850–1950 period—with no signs of slowing down.</li>
+    </ul>
+  </div>
+  <div style="flex: 1; padding-left: 20px; background-color: #f8f9fa; border-left: 4px solid #f28c38; padding: 15px; font-family: Arial, sans-serif; line-height: 1.6; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p style="margin: 0; color: #333; font-size: 16px;">
+      The global temperatures were approaching the critical 2°C threshold above pre-industrial levels—a limit often described as a "point of no return" for devastating climate impacts.
+    </p>
+  </div>
+</div>
+
+</div>
+
+
+
+---
+## Ice melting
+<div style="display: flex; flex-direction: row; align-items: flex-start; width: 100%;">
+
+<div style="flex: 1; padding-right: 20px;">
+```{r}
+# Load required libraries
+library(dplyr)
+library(plotly)
+
+# Read the CSV data
+data <- read.csv("data/ice-sheet-mass-balance/ice-sheet-mass-balance.csv")
+
+# Rename columns for clarity
+colnames(data) <- c("Entity", "Code", "Date", "Cumulative_Mass_Change")
+
+# Convert Date to Date format and extract Year
+data$Date <- as.Date(data$Date)
+data$Year <- as.integer(format(data$Date, "%Y"))
+
+# Prepare data for plotting: group by Entity and Year, calculate mean mass change
+plot_data <- data %>%
+  select(Entity, Year, Cumulative_Mass_Change) %>%
+  group_by(Entity, Year) %>%
+  summarise(
+    Cumulative_Mass_Change = mean(Cumulative_Mass_Change, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Split data for Antarctica and Greenland
+antarctica_data <- plot_data %>% filter(Entity == "Antarctica")
+greenland_data <- plot_data %>% filter(Entity == "Greenland")
+
+# Calculate min and max y-values for y-axis range, with padding
+max_y <- max(plot_data$Cumulative_Mass_Change, na.rm = TRUE)
+min_y <- min(plot_data$Cumulative_Mass_Change, na.rm = TRUE) - 100  # Add 100 Gt padding
+
+# Calculate total mass loss for annotations and get final points
+antarctica_last <- antarctica_data %>%
+  filter(Year == max(Year)) %>%
+  summarise(
+    Year = max(Year),
+    Cumulative_Mass_Change = round(Cumulative_Mass_Change, 2)
+  )
+greenland_last <- greenland_data %>%
+  filter(Year == max(Year)) %>%
+  summarise(
+    Year = max(Year),
+    Cumulative_Mass_Change = round(Cumulative_Mass_Change, 2)
+  )
+
+# Create Plotly plot with two traces for Antarctica and Greenland
+p <- plot_ly() %>%
+  # Trace for Antarctica
+  add_trace(
+    data = antarctica_data,
+    x = ~Year,
+    y = ~Cumulative_Mass_Change,
+    name = "Antarctica",
+    type = "scatter",
+    mode = "lines",
+    line = list(color = "#1f77b4"),
+    hoverinfo = "text",
+    text = ~paste("Year:", Year, 
+                  "<br>Antarctica Mass Change:", round(Cumulative_Mass_Change, 2), " Gt")
+  ) %>%
+  # Trace for Greenland
+  add_trace(
+    data = greenland_data,
+    x = ~Year,
+    y = ~Cumulative_Mass_Change,
+    name = "Greenland",
+    type = "scatter",
+    mode = "lines",
+    line = list(color = "#ff7f0e"),
+    hoverinfo = "text",
+    text = ~paste("Year:", Year, 
+                  "<br>Greenland Mass Change:", round(Cumulative_Mass_Change, 2), " Gt")
+  ) %>%
+  layout(
+    title = list(text = "Ice Sheet Mass Loss: Antarctica vs Greenland (NASA JPL)", x = 0.5, font = list(size = 14)),
+    xaxis = list(
+      title = "Year",
+      titlefont = list(size = 12),
+      tickfont = list(size = 10),
+      range = c(min(plot_data$Year) - 0.5, max(plot_data$Year) + 0.5)  # Add padding
+    ),
+    yaxis = list(
+      title = "Cumulative Mass Change (Gt)",
+      titlefont = list(size = 12),
+      tickfont = list(size = 10),
+      range = c(min_y, max_y)  # Use padded range
+    ),
+    showlegend = TRUE,
+    legend = list(
+      orientation = "h",
+      x = 0.5,
+      xanchor = "center",
+      y = -0.5,  # Shift legend down
+      yanchor = "top",
+      font = list(size = 10)
+    ),
+    margin = list(t = 50, b = 120, l = 50, r = 50),  # Keep bottom margin for legend and slider
+    autosize = TRUE,
+    width = NULL,
+    height = 400,
+    sliders = list(
+      list(
+        active = 0,
+        currentvalue = list(prefix = "Year: "),
+        pad = list(t = 20),
+        steps = lapply(unique(plot_data$Year), function(year) {
+          list(
+            label = as.character(year),
+            method = "restyle",
+            args = list(
+              list(
+                x = list(
+                  antarctica_data$Year[antarctica_data$Year <= year],
+                  greenland_data$Year[greenland_data$Year <= year]
+                ),
+                y = list(
+                  antarctica_data$Cumulative_Mass_Change[antarctica_data$Year <= year],
+                  greenland_data$Cumulative_Mass_Change[greenland_data$Year <= year]
+                )
+              ),
+              0:1  # Apply to both traces
+            )
+          )
+        })
+      )
+    ),
+    # Adding annotations with arrows, positioned upper-left of end points
+    annotations = list(
+      list(
+        x = antarctica_last$Year,  # 2020
+        y = antarctica_last$Cumulative_Mass_Change,  # -2746
+        xref = "x",
+        yref = "y",
+        text = paste("Antarctica Mass Loss from\n2002-2020:", abs(antarctica_last$Cumulative_Mass_Change), " Gt"),
+        showarrow = TRUE,
+        arrowhead = 2,
+        ax = -40,  # Move left
+        ay = -40,  # Move up
+        font = list(size = 10, color = "black"),
+        bgcolor = "rgb(255, 255, 255)",  # White background
+        bordercolor = "black",  # Black outline
+        borderwidth = 1,
+        align = "center"
+      ),
+      list(
+        x = greenland_last$Year,  # 2020
+        y = greenland_last$Cumulative_Mass_Change,  # -4899.46
+        xref = "x",
+        yref = "y",
+        text = paste("Greenland Mass Loss from\n2002-2020:", abs(greenland_last$Cumulative_Mass_Change), " Gt"),
+        showarrow = TRUE,
+        arrowhead = 2,
+        ax = -40,  # Move left
+        ay = -40,  # Move up
+        font = list(size = 10, color = "black"),
+        bgcolor = "rgb(255, 255, 255)",  # White background
+        bordercolor = "black",  # Black outline
+        borderwidth = 1,
+        align = "center"
+      )
+    )
+  )
+
+# Display the plot
+p
+```
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 15px;">
+  <div style="flex: 1; padding-left: 20px; background-color: #f8f9fa; border-left: 4px solid #dc3545; padding: 15px; font-family: Arial, sans-serif; line-height: 1.6; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p style="margin: 0 0 10px 0; color: #333; font-size: 16px;">
+      Rising temperatures have driven significant ice mass loss in the Arctic (Greenland) and Antarctica:
+    </p>
+    <ul style="margin: 0; padding-left: 20px; color: #333; font-size: 16px; list-style-type: disc;">
+      <li style="margin-bottom: 5px;">From 2002 to 2020, Greenland has lost 4842.51Gt of ice mass, which is approximately 270 Gt per year</li>
+      <li style="margin-bottom: 5px;">Antarctica also suffered from the same destiny. Up to 2020, Antarctica also lost 2539.05 Gt of ice mass compared to 2002.</li>
+    </ul>
+</div>
+
+</div>
+
+---
+
+## Sea level rising
+
+<div style="display: flex; flex-direction: row; align-items: flex-start; width: 100%;">
+
+<div style="flex: 1; padding-right: 20px;">
+```{r}
+# Load required libraries
+library(dplyr)
+library(plotly)
+
+# Read the CSV data
+data <- read.csv("data/sea-level/sea-level.csv")
+
+# Rename columns for clarity
+colnames(data) <- c("Entity", "Code", "Date", "Church_White", "UHSLC", "Average")
+
+# Convert Date to Date format and extract Year and Quarter
+data$Date <- as.Date(data$Date)
+data$Year <- as.integer(format(data$Date, "%Y"))
+data$Quarter <- case_when(
+  format(data$Date, "%m") %in% c("01") ~ "Q1",
+  format(data$Date, "%m") %in% c("04") ~ "Q2",
+  format(data$Date, "%m") %in% c("07") ~ "Q3",
+  format(data$Date, "%m") %in% c("10") ~ "Q4"
+)
+
+# Prepare data for plotting: select relevant columns and summarize
+plot_data <- data %>%
+  select(Year, Quarter, Church_White, UHSLC, Average) %>%
+  group_by(Year, Quarter) %>%
+  summarise(
+    Church_White = mean(Church_White, na.rm = TRUE),
+    UHSLC = mean(UHSLC, na.rm = TRUE),
+    Average = mean(Average, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Calculate single line of best fit using Average column
+combined_lm <- lm(Average ~ Year, data = plot_data)
+combined_slope <- round(coef(combined_lm)["Year"], 2)
+
+# Create data for best fit line
+years <- seq(min(plot_data$Year), max(plot_data$Year), length.out = 100)
+combined_fit <- data.frame(
+  Year = years,
+  Sea_Level = predict(combined_lm, newdata = data.frame(Year = years))
+)
+
+# Calculate median year and y-value for annotation
+middle_year <- median(unique(plot_data$Year))  # 1950
+middle_y <- predict(combined_lm, newdata = data.frame(Year = middle_year))
+
+# Calculate min and max y-values for y-axis range, with padding
+max_y <- max(c(plot_data$Church_White, plot_data$UHSLC, plot_data$Average, combined_fit$Sea_Level), na.rm = TRUE) + 5
+min_y <- min(c(plot_data$Church_White, plot_data$UHSLC, plot_data$Average, combined_fit$Sea_Level), na.rm = TRUE) - 5
+
+# Create Plotly plot with traces for data and single best fit line
+p <- plot_ly() %>%
+  # Trace for Church and White (2011) data
+  add_trace(
+    data = plot_data,
+    x = ~Year,
+    y = ~Church_White,
+    name = "Church & White (2011)",
+    type = "scatter",
+    mode = "lines",
+    line = list(color = "#1f77b4"),
+    hoverinfo = "text",
+    text = ~paste("Year:", Year, "<br>Quarter:", Quarter, 
+                  "<br>Church & White Sea Level:", round(Church_White, 2), " mm")
+  ) %>%
+  # Trace for UHSLC data
+  add_trace(
+    data = plot_data,
+    x = ~Year,
+    y = ~UHSLC,
+    name = "UHSLC",
+    type = "scatter",
+    mode = "lines",
+    line = list(color = "#ff7f0e"),
+    hoverinfo = "text",
+    text = ~paste("Year:", Year, "<br>Quarter:", Quarter, 
+                  "<br>UHSLC Sea Level:", round(UHSLC, 2), " mm")
+  ) %>%
+  # Trace for combined best fit line
+  add_trace(
+    data = combined_fit,
+    x = ~Year,
+    y = ~Sea_Level,
+    name = "Combined Fit",
+    type = "scatter",
+    mode = "lines",
+    line = list(color = "#2ca02c"),
+    hoverinfo = "text",
+    text = ~paste("Year:", round(Year, 1), "<br>Combined Fit:", round(Sea_Level, 2), " mm")
+  ) %>%
+  layout(
+    title = list(text = "Global Sea Level: Church & White (2011) vs UHSLC", x = 0.5, font = list(size = 14)),
+    xaxis = list(
+      title = "Year",
+      titlefont = list(size = 12),
+      tickfont = list(size = 10),
+      range = c(min(plot_data$Year) - 0.5, max(plot_data$Year) + 0.5)  # 1879.5–2020.5
+    ),
+    yaxis = list(
+      title = "Sea Level (mm)",
+      titlefont = list(size = 12),
+      tickfont = list(size = 10),
+      range = c(min_y, max_y)  # ~-209.38 to ~73.81
+    ),
+    showlegend = TRUE,
+    legend = list(
+      orientation = "h",
+      x = 0.5,
+      xanchor = "center",
+      y = -0.5,
+      font = list(size = 10)
+    ),
+    margin = list(t = 50, b = 120, l = 50, r = 50),
+    autosize = TRUE,
+    width = NULL,
+    height = 400,
+    sliders = list(
+      list(
+        active = 0,
+        currentvalue = list(prefix = "Year: "),
+        pad = list(t = 20),
+        steps = lapply(unique(plot_data$Year), function(year) {
+          list(
+            label = as.character(year),
+            method = "restyle",
+            args = list(
+              list(
+                x = list(
+                  plot_data$Year[plot_data$Year <= year],
+                  plot_data$Year[plot_data$Year <= year],
+                  combined_fit$Year[combined_fit$Year <= year]
+                ),
+                y = list(
+                  plot_data$Church_White[plot_data$Year <= year],
+                  plot_data$UHSLC[plot_data$Year <= year],
+                  combined_fit$Sea_Level[combined_fit$Year <= year]
+                )
+              ),
+              0:2  # Apply to all three traces
+            )
+          )
+        })
+      )
+    ),
+    # Annotation for sea level rise rate
+    annotations = list(
+      list(
+        x = middle_year,  # 1950
+        y = middle_y,  # Predicted value
+        xref = "x",
+        yref = "y",
+        text = paste("Annual Sea Level Rise:<br>", combined_slope, " mm/year"),
+        showarrow = TRUE,
+        arrowhead = 2,
+        ax = -40,  # Slightly left
+        ay = -40,  # Slightly up
+        font = list(size = 10, color = "black"),
+        bgcolor = "rgb(255, 255, 255)",  # White background
+        bordercolor = "black",  # Black outline
+        borderwidth = 1,
+        align = "center"
+      )
+    )
+  )
+
+# Display the plot
+p
+```
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 15px;">
+  <div style="flex: 1; padding-left: 20px; background-color: #f8f9fa; border-left: 4px solid #6f42c1; padding: 15px; font-family: Arial, sans-serif; line-height: 1.6; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p style="margin: 0; color: #333; font-size: 16px;">
+      The butterfly effect of CO2 emissions is starkly illustrated in the accelerating sea level rise from 1880 to 2015. As CO2-driven warming melted ice sheets—evidenced by the loss of over 7000 Gt from Greenland and Antarctica by 2020—global sea levels surged. On average, the annual sea level rise is 1.65mm per year.
+    </p>
+  </div>
+</div>
+
+</div>
+
+---
+
+## What are we doing?
+
+<div style="display: flex; flex-direction: row; align-items: flex-start; width: 100%;">
+
+<div style="flex: 1; padding-right: 20px;">
+```{r}
+library(dplyr)
+library(plotly)
+
+# Read the CSV file
+data <- read.csv("data/primary-energy-fossil-nuclear-renewables/primary-energy-fossil-nuclear-renewables.csv")
+colnames(data) <- c("Entity", "Code", "Year", "Nuclear_percent", "Renewables_percent", "Fossil_fuels_percent")
+
+# Filter for World and select relevant columns
+plot_data <- data %>%
+  filter(Entity == "World") %>%
+  select(Year, Nuclear = Nuclear_percent, Renewables = Renewables_percent, Fossil_fuels = Fossil_fuels_percent)
+
+# Create the stacked area chart with a time slider
+p <- plot_ly() %>%
+  add_trace(
+    data = plot_data,
+    x = ~Year, y = ~Fossil_fuels, name = "Fossil fuels",
+    type = "scatter", mode = "none", stackgroup = "one",
+    fillcolor = "rgba(139, 0, 0, 0.8)",
+    hoverinfo = "text", text = ~paste("Year:", Year, "<br>Fossil Fuels:", round(Fossil_fuels, 2), "%")
+  ) %>%
+  add_trace(
+    data = plot_data,
+    x = ~Year, y = ~Renewables, name = "Renewables",
+    type = "scatter", mode = "none", stackgroup = "one",
+    fillcolor = "rgba(0, 100, 0, 0.8)",
+    hoverinfo = "text", text = ~paste("Year:", Year, "<br>Renewables:", round(Renewables, 2), "%")
+  ) %>%
+  add_trace(
+    data = plot_data,
+    x = ~Year, y = ~Nuclear, name = "Nuclear",
+    type = "scatter", mode = "none", stackgroup = "one",
+    fillcolor = "rgba(173, 216, 230, 0.8)",
+    hoverinfo = "text", text = ~paste("Year:", Year, "<br>Nuclear:", round(Nuclear, 2), "%")
+  ) %>%
+  layout(
+    title = list(text = "Global Energy Mix (1965–2023)", x = 0.5, font = list(size = 14)),
+    xaxis = list(
+      title = "Year",
+      titlefont = list(size = 12),
+      tickfont = list(size = 10),
+      range = c(1965, 2023)
+    ),
+    yaxis = list(
+      title = "Percentage (%)",
+      titlefont = list(size = 12),
+      tickfont = list(size = 10),
+      range = c(0, 100)
+    ),
+    legend = list(
+      orientation = "v",
+      x = 1.05,
+      xanchor = "left",
+      y = 0.5,
+      font = list(size = 10)
+    ),
+    margin = list(t = 50, b = 50, l = 50, r = 50),
+    autosize = TRUE,
+    height = 400,
+    sliders = list(
+      list(
+        active = length(unique(plot_data$Year)) - 1, # Start at the last year (2023)
+        currentvalue = list(prefix = "Year: "),
+        pad = list(t = 20),
+        steps = lapply(unique(plot_data$Year), function(year) {
+          list(
+            label = as.character(year),
+            method = "restyle",
+            args = list(
+              list(
+                x = list(plot_data$Year[plot_data$Year <= year]),
+                y = list(
+                  plot_data$Fossil_fuels[plot_data$Year <= year],
+                  plot_data$Renewables[plot_data$Year <= year],
+                  plot_data$Nuclear[plot_data$Year <= year]
+                )
+              ),
+              list(0, 1, 2) # Apply to all three traces (indices 0, 1, 2)
+            )
+          )
+        })
+      )
+    )
+  )
+
+# Display the plot
+p
+```
+
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 15px;">
+  <div style="flex: 1; padding-left: 20px; background-color: #f8f9fa; border-left: 4px solid #dc3545; padding: 15px; font-family: Arial, sans-serif; line-height: 1.6; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p style="margin: 0; color: #333; font-size: 16px;">
+      Greenhouse gas concentrations in the atmosphere and yearly human-caused GHG emissions are still rising and have reached record levels, primarily due to the ongoing use of fossil fuels.
+    </p>
+  </div>
+  <div style="flex: 1; padding-left: 20px; background-color: #f8f9fa; border-left: 4px solid #6f42c1; padding: 15px; font-family: Arial, sans-serif; line-height: 1.6; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p style="margin: 0; color: #333; font-size: 16px;">
+      Despite concerted efforts to mitigate greenhouse gas emissions, such as the notable increase in global renewable energy contributions from 2.86% in 2003 to 6.72% in 2023—an almost threefold rise—fossil fuels continue to dominate the global energy mix, accounting for over 90% of energy consumption in 2023. This persistence underscores the need for significantly enhanced efforts to transition to sustainable energy sources.
+    </p>
+  </div>
+</div>
+
+</div>
+
+---
+
+## How much effort is needed?
+
+<div style="display: flex; flex-direction: row; align-items: flex-start; width: 100%;">
+
+<div style="flex: 1; padding-right: 20px;">
+```{r}
+library(dplyr)
+library(plotly)
+
+# Read the CSV file
+data <- read.csv("data/co2-mitigation-15c/co2-mitigation-15c.csv")
+colnames(data) <- c("Entity", "Code", "Year", "CO2_emissions")
+
+# Filter for Historical and selected mitigation scenarios
+plot_data <- data %>%
+  filter(Entity %in% c("Historical", "Start in 2000", "Start in 2010", "Start in 2020", "Start in 2025")) %>%
+  select(Entity, Year, CO2_emissions)
+
+# Convert emissions to billions of tons for readability
+plot_data$CO2_emissions <- plot_data$CO2_emissions / 1e9
+
+# Create the interactive line plot
+p <- plot_ly() %>%
+  add_trace(
+    data = plot_data %>% filter(Entity == "Historical"),
+    x = ~Year, y = ~CO2_emissions, name = "Historical",
+    type = "scatter", mode = "lines",
+    line = list(color = "rgba(139, 0, 0, 0.8)", width = 2),
+    hoverinfo = "text", text = ~paste("Year:", Year, "<br>CO2 Emissions:", round(CO2_emissions, 2), "B tons")
+  ) %>%
+  add_trace(
+    data = plot_data %>% filter(Entity == "Start in 2000"),
+    x = ~Year, y = ~CO2_emissions, name = "Start in 2000",
+    type = "scatter", mode = "lines",
+    line = list(color = "rgba(0, 100, 0, 0.8)", width = 2),
+    hoverinfo = "text", text = ~paste("Year:", Year, "<br>CO2 Emissions:", round(CO2_emissions, 2), "B tons")
+  ) %>%
+  add_trace(
+    data = plot_data %>% filter(Entity == "Start in 2010"),
+    x = ~Year, y = ~CO2_emissions, name = "Start in 2010",
+    type = "scatter", mode = "lines",
+    line = list(color = "rgba(0, 0, 139, 0.8)", width = 2),
+    hoverinfo = "text", text = ~paste("Year:", Year, "<br>CO2 Emissions:", round(CO2_emissions, 2), "B tons")
+  ) %>%
+  add_trace(
+    data = plot_data %>% filter(Entity == "Start in 2020"),
+    x = ~Year, y = ~CO2_emissions, name = "Start in 2020",
+    type = "scatter", mode = "lines",
+    line = list(color = "rgba(255, 165, 0, 0.8)", width = 2),
+    hoverinfo = "text", text = ~paste("Year:", Year, "<br>CO2 Emissions:", round(CO2_emissions, 2), "B tons")
+  ) %>%
+  add_trace(
+    data = plot_data %>% filter(Entity == "Start in 2025"),
+    x = ~Year, y = ~CO2_emissions, name = "Start in 2025",
+    type = "scatter", mode = "lines",
+    line = list(color = "rgba(128, 0, 128, 0.8)", width = 2),
+    hoverinfo = "text", text = ~paste("Year:", Year, "<br>CO2 Emissions:", round(CO2_emissions, 2), "B tons")
+  ) %>%
+  layout(
+    title = list(text = "CO2 Emissions: Historical and 1.5°C Mitigation Scenarios (1750–2100)", x = 0.5, font = list(size = 14)),
+    xaxis = list(
+      title = "Year",
+      titlefont = list(size = 12),
+      tickfont = list(size = 10),
+      range = c(1750, 2100)
+    ),
+    yaxis = list(
+      title = "CO2 Emissions (Billion Tons)",
+      titlefont = list(size = 12),
+      tickfont = list(size = 10),
+      type = "log",
+      range = c(log10(0.009), log10(50))
+    ),
+    legend = list(
+      orientation = "v",
+      x = 1.05,
+      xanchor = "left",
+      y = 0.5,
+      font = list(size = 10)
+    ),
+    margin = list(t = 50, b = 50, l = 50, r = 50),
+    autosize = TRUE,
+    height = 400,
+    annotations = list(
+      list(
+        x = 1850,
+        y = log10(2.72), # Emission in 1850 (2.72 billion tons)
+        text = "1850: Industrial Revolution<br>Emissions surge to 2.72B tons",
+        showarrow = TRUE,
+        arrowhead = 2,
+        ax = -20,
+        ay = -30,
+        font = list(size = 9),
+        bordercolor = "black",
+        bgcolor = "white",
+        borderwidth = 1
+      ),
+      list(
+        x = 2025,
+        y = log10(42.33), # Emission in 2025 for Start in 2025
+        text = "2025: Delayed action<br>Requires near-zero by 2046",
+        showarrow = TRUE,
+        arrowhead = 2,
+        ax = -120,
+        ay = 10,
+        font = list(size = 9),
+        bordercolor = "black",
+        bgcolor = "white",
+        borderwidth = 1
+      ),
+      list(
+        x = 2000,
+        y = log10(30.07), # Emission in 2000 for Start in 2000
+        text = "2000: Early action<br> Reduction to 0.54B by 2100",
+        showarrow = TRUE,
+        arrowhead = 2,
+        ax = -50,
+        ay = 80,
+        font = list(size = 9),
+        bordercolor = "black",
+        bgcolor = "white",
+        borderwidth = 1
+      ),
+      list(
+        x = 2050,
+        y = log10(0.01), # Near bottom of plot
+        text = "Later starts need steeper cuts\nThe later, the harder",
+        showarrow = FALSE,
+        font = list(size = 10),
+        bordercolor = "black",
+        bgcolor = "white",
+        borderwidth = 1
+      )
+    ),
+    sliders = list(
+      list(
+        active = length(unique(plot_data$Year)) - 1,
+        currentvalue = list(prefix = "Year: "),
+        pad = list(t = 20),
+        steps = lapply(unique(plot_data$Year), function(year) {
+          list(
+            label = as.character(year),
+            method = "restyle",
+            args = list(
+              list(
+                x = list(
+                  plot_data$Year[plot_data$Year <= year & plot_data$Entity == "Historical"],
+                  plot_data$Year[plot_data$Year <= year & plot_data$Entity == "Start in 2000"],
+                  plot_data$Year[plot_data$Year <= year & plot_data$Entity == "Start in 2010"],
+                  plot_data$Year[plot_data$Year <= year & plot_data$Entity == "Start in 2020"],
+                  plot_data$Year[plot_data$Year <= year & plot_data$Entity == "Start in 2025"]
+                ),
+                y = list(
+                  plot_data$CO2_emissions[plot_data$Year <= year & plot_data$Entity == "Historical"],
+                  plot_data$CO2_emissions[plot_data$Year <= year & plot_data$Entity == "Start in 2000"],
+                  plot_data$CO2_emissions[plot_data$Year <= year & plot_data$Entity == "Start in 2010"],
+                  plot_data$CO2_emissions[plot_data$Year <= year & plot_data$Entity == "Start in 2020"],
+                  plot_data$CO2_emissions[plot_data$Year <= year & plot_data$Entity == "Start in 2025"]
+                )
+              ),
+              list(0, 1, 2, 3, 4)
+            )
+          )
+        })
+      )
+    )
+  )
+
+# Display the plot
+p
+```
+
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 15px;">
+  <div style="flex: 1; padding-left: 20px; background-color: #f8f9fa; border-left: 4px solid #dc3545; padding: 15px; font-family: Arial, sans-serif; line-height: 1.6; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p style="margin: 0; color: #333; font-size: 16px;">
+      Our target is to keep the global warming below global average temperature rise below 1.5°C by 2100.
+    </p>
+  </div>
+  <div style="flex: 1; padding-left: 20px; background-color: #f8f9fa; border-left: 4px solid #6f42c1; padding: 15px; font-family: Arial, sans-serif; line-height: 1.6; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p style="margin: 0; color: #333; font-size: 16px;">
+      To meet the 1.5°C target, timing is critical—starting reductions in 2000 allowed a steady decline to 0.548 billion tons by 2100, while delaying until 2025 requires a drastic, near-vertical drop. This stark calls for immediate action. The more we delay, the steeper the challenge.
+    </p>
+  </div>
+</div>
+
+</div>
+
+---
+
+## How are we reacting?
+
+<div style="display: flex; flex-direction: row; align-items: flex-start; width: 100%;">
+
+<div style="flex: 1; padding-right: 20px;">
+```{r}
+library(dplyr)
+library(plotly)
+
+# Read the CSV file
+data <- read.csv("data/net-zero-targets/net-zero-targets.csv")
+colnames(data) <- c("Entity", "Code", "Year", "Status")
+
+# Filter out non-country entities and invalid codes
+data <- data %>% filter(Code != "" & Entity != "European Union (27)")
+
+# Ensure Year is numeric
+data$Year <- as.numeric(data$Year)
+
+# Define the desired order of Status levels to match status_colors
+status_levels <- c(
+  "Achieved (self-declared)",
+  "In law",
+  "In policy document",
+  "Declaration / pledge",
+  "Proposed / in discussion"
+)
+
+# Set Status as a factor with the correct order
+data$Status <- factor(data$Status, levels = status_levels)
+
+# Define discrete color palette for statuses (more distinct pastel colors with alpha)
+status_colors <- c(
+  "Achieved (self-declared)" = "#A3BFFAB3",  # Slightly more vibrant pastel blue
+  "In law" = "#68D391B3",                    # More defined pastel green
+  "In policy document" = "#C6F0C2B3",        # Lighter, distinct pastel green
+  "Declaration / pledge" = "#C3AED6B3",      # Clearer pastel purple
+  "Proposed / in discussion" = "#E4C1A0B3"   # Warmer, more distinct pastel brown
+)
+
+# Create a custom colorscale for discrete colors
+colorscale <- lapply(seq_along(levels(data$Status)), function(i) {
+  list((i-1)/(length(levels(data$Status))-1), status_colors[i])
+})
+
+# Create the choropleth map
+p <- plot_ly(
+  data = data,
+  type = "choropleth",
+  locations = ~Code,
+  z = ~as.numeric(Status),  # Numeric for z, but use colorscale for discrete colors
+  text = ~paste("Entity:", Entity, "<br>Year:", Year, "<br>Status:", Status),
+  hoverinfo = "text",
+  colorscale = colorscale,  # Custom discrete colorscale
+  showscale = FALSE  # Disable the colorbar (legend)
+) %>%
+  layout(
+    title = list(
+      text = "Global Net-Zero Carbon Emissions Targets by Status",
+      x = 0.5,
+      font = list(size = 14)
+    ),
+    geo = list(
+      showframe = FALSE,
+      showcoastlines = TRUE,
+      projection = list(
+        type = "mercator",
+        scale = 1.46785
+      ),
+      center = list(
+        lon = 0,
+        lat = 35
+      ),
+      bgcolor = "rgba(0,0,0,0)"
+    ),
+    margin = list(t = 50, b = 50, l = 50, r = 50),
+    autosize = TRUE,
+    height = 500,
+    # Add shapes for colored squares
+    shapes = list(
+      # Square for Achieved (self-declared)
+      list(
+        type = "rect",
+        x0 = 0.05, x1 = 0.07,
+        y0 = 0.19, y1 = 0.21,  # Aligned with the first status label
+        xref = "paper", yref = "paper",
+        fillcolor = "#A3BFFAB3",  # Pastel Blue
+        line = list(color = "black", width = 1)
+      ),
+      # Square for In law
+      list(
+        type = "rect",
+        x0 = 0.05, x1 = 0.07,
+        y0 = 0.17, y1 = 0.19,  # Aligned with the second status label
+        xref = "paper", yref = "paper",
+        fillcolor = "#68D391B3",  # Pastel Green
+        line = list(color = "black", width = 1)
+      ),
+      # Square for In policy document
+      list(
+        type = "rect",
+        x0 = 0.05, x1 = 0.07,
+        y0 = 0.15, y1 = 0.17,  # Aligned with the third status label
+        xref = "paper", yref = "paper",
+        fillcolor = "#C6F0C2B3",  # Light Pastel Green
+        line = list(color = "black", width = 1)
+      ),
+      # Square for Declaration / pledge
+      list(
+        type = "rect",
+        x0 = 0.05, x1 = 0.07,
+        y0 = 0.13, y1 = 0.15,  # Aligned with the fourth status label
+        xref = "paper", yref = "paper",
+        fillcolor = "#C3AED6B3",  # Pastel Purple
+        line = list(color = "black", width = 1)
+      ),
+      # Square for Proposed / in discussion
+      list(
+        type = "rect",
+        x0 = 0.05, x1 = 0.07,
+        y0 = 0.11, y1 = 0.13,  # Aligned with the fifth status label
+        xref = "paper", yref = "paper",
+        fillcolor = "#E4C1A0B3",  # Pastel Brown
+        line = list(color = "black", width = 1)
+      )
+    ),
+    # Add annotations for status labels next to the squares
+    annotations = list(
+      # Title for the legend
+      list(
+        x = 0.05,
+        y = 0.23,
+        xref = "paper",
+        yref = "paper",
+        text = "Status Colors:",
+        showarrow = FALSE,
+        font = list(size = 9),
+        xanchor = "left"
+      ),
+      # Achieved (self-declared)
+      list(
+        x = 0.08,
+        y = 0.20,
+        xref = "paper",
+        yref = "paper",
+        text = "Achieved (self-declared)",
+        showarrow = FALSE,
+        font = list(size = 9),
+        xanchor = "left",
+        yanchor = "middle"
+      ),
+      # In law
+      list(
+        x = 0.08,
+        y = 0.18,
+        xref = "paper",
+        yref = "paper",
+        text = "In law",
+        showarrow = FALSE,
+        font = list(size = 9),
+        xanchor = "left",
+        yanchor = "middle"
+      ),
+      # In policy document
+      list(
+        x = 0.08,
+        y = 0.16,
+        xref = "paper",
+        yref = "paper",
+        text = "In policy document",
+        showarrow = FALSE,
+        font = list(size = 9),
+        xanchor = "left",
+        yanchor = "middle"
+      ),
+      # Declaration / pledge
+      list(
+        x = 0.08,
+        y = 0.14,
+        xref = "paper",
+        yref = "paper",
+        text = "Declaration / pledge",
+        showarrow = FALSE,
+        font = list(size = 9),
+        xanchor = "left",
+        yanchor = "middle"
+      ),
+      # Proposed / in discussion
+      list(
+        x = 0.08,
+        y = 0.12,
+        xref = "paper",
+        yref = "paper",
+        text = "Proposed / in discussion",
+        showarrow = FALSE,
+        font = list(size = 9),
+        xanchor = "left",
+        yanchor = "middle"
+      )
+    )
+  )
+
+# Display the plot
+p
+```
+
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 15px;">
+  <div style="flex: 1; padding-left: 20px; background-color: #f8f9fa; border-left: 4px solid #dc3545; padding: 15px; font-family: Arial, sans-serif; line-height: 1.6; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p style="margin: 0; color: #333; font-size: 16px;">
+      Many countries have taken action, trying to achieve net-zero carbon emissions, with 71 in discussion, 68 countries has policies, 35 has official law.
+    </p>
+  </div>
+  <div style="flex: 1; padding-left: 20px; background-color: #f8f9fa; border-left: 4px solid #6f42c1; padding: 15px; font-family: Arial, sans-serif; line-height: 1.6; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p style="margin: 0; color: #333; font-size: 16px;">
+      Most countries target 2050 for net-zero, with some aiming for 2030, while major emitters like China and India delay to 2060 or 2070.
+    </p>
+  </div>
+  <div style="flex: 1; padding-left: 20px; background-color: #f8f9fa; border-left: 4px solid #28a745; padding: 15px; font-family: Arial, sans-serif; line-height: 1.6; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p style="margin: 0; color: #333; font-size: 16px;">
+      Some countries, such as Norway and Sweden, have achieved significant reductions in CO2 emissions and are on track to meet their net-zero targets.
+    </p>
+  </div>
+</div>
+
+</div>
+
+---
+
+## Are we 'cooked'?
+
+<div style="background-color: #f8f9fa; border-left: 4px solid #dc3545; padding: 20px; font-family: Arial, sans-serif; line-height: 1.6; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin: 20px;">
+  <h3 style="color: #333; font-size: 24px; margin-bottom: 15px;">The Verdict: On the Brink, But Not Doomed</h3>
+  <p style="color: #333; font-size: 18px; margin: 0;">
+    We're not 'cooked'—yet—but we're in the oven, and the heat is rising fast. In 2023, greenhouse gas emissions hit <strong>50 billion tons</strong>, up <strong>371 million tons</strong> annually since 1950, pushing temperatures toward the <strong>2°C</strong> threshold. Ice sheets lost over <strong>7,000 Gt</strong>, driving sea levels up <strong>1.65 mm/year</strong>, while fossil fuels still dominate at <strong>90%</strong> of energy use. Delaying action to 2025 demands near-zero emissions by 2046 to meet the 1.5°C target. But hope remains: renewables tripled since 2003, 35 countries have net-zero laws, and nations like Norway show progress. Immediate, bold action is our only path to turn down the dial.
+  </p>
+</div>
+
+---

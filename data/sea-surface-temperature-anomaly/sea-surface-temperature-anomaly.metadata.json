@@ -1,0 +1,76 @@
+{
+  "chart": {
+    "title": "Annual sea surface temperature anomalies relative to the pre-industrial period",
+    "subtitle": "The difference of average sea surface temperatures compared to the mean from 1861-1890, in degrees Celcius. This is measured at a depth of 20 centimeters.",
+    "note": "The period 1861–1890 is used as the baseline to measure temperature changes relative to pre-industrial times, [as recommended by climate research institutions](https://www.metoffice.gov.uk/hadobs/indicators/index.html#:~:text=The%201961%2D90%20period%20is,other%20parts%20of%20the%20world.).",
+    "citation": "Met Office Hadley Centre - Hadley Centre's Sea Surface Temperature (HadSST) (2025)",
+    "originalChartUrl": "https://ourworldindata.org/grapher/sea-surface-temperature-anomaly?v=1&csvType=full&useColumnShortNames=false",
+    "selection": [
+      "World"
+    ]
+  },
+  "columns": {
+    "Annual sea surface temperature anomalies": {
+      "titleShort": "Average",
+      "titleLong": "Average",
+      "descriptionShort": "Deviation of the average sea surface temperature measured at a nominal depth of 20cm from the 1861-1890 mean, in degrees Celsius.",
+      "descriptionKey": [
+        "Temperature anomalies show how many degrees Celsius temperatures have changed compared to the 1861-1890 period. This baseline period is commonly used to highlight the changes in temperature since pre-industrial times, prior to major human impacts.",
+        "The data includes separate measurements for the Northern and Southern Hemispheres, which helps researchers analyze regional differences.",
+        "This data is based on the HadISST method. This method averages temperature measurements onto a fixed grid. If no data is available for a grid cell, it remains empty and adds extra uncertainty when calculating averages like the global mean.",
+        "Despite different approaches, HadISST and other methods show similar global temperature trends."
+      ],
+      "shortUnit": "°C",
+      "unit": "degrees Celsius",
+      "timespan": "1850-2025",
+      "type": "Numeric",
+      "owidVariableId": 1015535,
+      "shortName": "sea_temperature_anomaly_annual",
+      "lastUpdated": "2025-03-17",
+      "nextUpdate": "2025-05-16",
+      "citationShort": "Met Office Hadley Centre - Hadley Centre's Sea Surface Temperature (HadSST) (2025) – with major processing by Our World in Data",
+      "citationLong": "Met Office Hadley Centre - Hadley Centre's Sea Surface Temperature (HadSST) (2025) – with major processing by Our World in Data. “Average” [dataset]. Met Office Hadley Centre, “Hadley Centre's Sea Surface Temperature (HadSST) 4.1.0.0” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/1015535.metadata.json"
+    },
+    "Annual sea surface temperature anomalies (lower bound)": {
+      "titleShort": "Lower bound",
+      "titleLong": "Lower bound",
+      "descriptionShort": "The lower bound, defined as the 95% confidence interval for the annual sea surface temperature anomalies, represents the deviation of the average sea surface temperature measured at a nominal depth of 20 cm from the 1861–1890 mean, in degrees Celsius.",
+      "descriptionKey": [
+        "The lower bound is the 95% confidence interval for the annual sea surface temperature anomalies. It represents the range of values within which the true value is expected to fall with 95% certainty."
+      ],
+      "shortUnit": "°C",
+      "unit": "degrees Celsius",
+      "timespan": "1850-2025",
+      "type": "Numeric",
+      "owidVariableId": 1015538,
+      "shortName": "sea_temperature_anomaly_low_annual",
+      "lastUpdated": "2025-03-17",
+      "nextUpdate": "2025-05-16",
+      "citationShort": "Met Office Hadley Centre - Hadley Centre's Sea Surface Temperature (HadSST) (2025) – with major processing by Our World in Data",
+      "citationLong": "Met Office Hadley Centre - Hadley Centre's Sea Surface Temperature (HadSST) (2025) – with major processing by Our World in Data. “Lower bound” [dataset]. Met Office Hadley Centre, “Hadley Centre's Sea Surface Temperature (HadSST) 4.1.0.0” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/1015538.metadata.json"
+    },
+    "Annual sea surface temperature anomalies (upper bound)": {
+      "titleShort": "Upper bound",
+      "titleLong": "Upper bound",
+      "descriptionShort": "The upper bound, defined as the 95% confidence interval for the annual sea surface temperature anomalies, represents the deviation of the average sea surface temperature measured at a nominal depth of 20 cm from the 1861–1890 mean, in degrees Celsius.",
+      "descriptionKey": [
+        "The upper bound is the 95% confidence interval for the annual sea surface temperature anomalies. It represents the range of values within which the true value is expected to fall with 95% certainty."
+      ],
+      "shortUnit": "°C",
+      "unit": "degrees Celsius",
+      "timespan": "1850-2025",
+      "type": "Numeric",
+      "owidVariableId": 1015540,
+      "shortName": "sea_temperature_anomaly_high_annual",
+      "lastUpdated": "2025-03-17",
+      "nextUpdate": "2025-05-16",
+      "citationShort": "Met Office Hadley Centre - Hadley Centre's Sea Surface Temperature (HadSST) (2025) – with major processing by Our World in Data",
+      "citationLong": "Met Office Hadley Centre - Hadley Centre's Sea Surface Temperature (HadSST) (2025) – with major processing by Our World in Data. “Upper bound” [dataset]. Met Office Hadley Centre, “Hadley Centre's Sea Surface Temperature (HadSST) 4.1.0.0” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/1015540.metadata.json"
+    }
+  },
+  "dateDownloaded": "2025-05-05",
+  "activeFilters": {}
+}
